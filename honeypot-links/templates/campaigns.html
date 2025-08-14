@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Kampanyalar</h2>
+<div class="table-wrap" style="margin-top:10px;">
+  <table>
+    <thead>
+      <tr>
+        <th>Kampanya</th>
+        <th>Tıklamalar</th>
+        <th>CTR (yaklaşık)</th>
+        <th>İşlem</th> <!-- nouvelle colonne pour actions -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in campaigns %}
+        <tr id="row-{{ loop.index }}">
+          <td>{{ c.campaign }}</td>
+          <td>{{ c.clicks }}</td>
+          <td>{{ "%.1f%%"|format(c.ctr*100) }}</td>
+          <td>
+            {% if c.campaign != "(sans campagne)" %}
+              <button onclick="deleteCampaign('{{ c.campaign }}', {{ loop.index }})">
+                Sil
+              </button>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4">Veri yok.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+function deleteCampaign(campaign, rowIndex) {
+    if (!confirm(`"${campaign}" kampanyasını ve tüm bağlantılarını silmek istediğinizden emin misiniz?`)) {
+        return;
+    }
+
+    fetch(`/campaigns/delete/${encodeURIComponent(campaign)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(resp => resp.json())
+    .then(data => {
+        if (data.ok) {
+            alert(`Silindi: ${data.deleted_links} bağlantı.`);
+            // supprimer la ligne du tableau
+            document.getElementById(`row-${rowIndex}`).remove();
+        } else {
+            alert("Hata: " + (data.error || "Bilinmeyen hata"));
+        }
+    })
+    .catch(err => alert("Sunucu hatası: " + err));
+}
+</script>
+{% endblock %}

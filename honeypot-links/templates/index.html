@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Test bağlantıları oluştur</h2>
+<form action="{{ url_for('generate') }}" method="post" class="row" style="margin-top:10px;">
+  <div>
+    <label>Sahte dosya adı</label>
+    <input name="file" placeholder="maas_raporu_2025.pdf" required>
+  </div>
+  <div>
+    <label>Kampanya (isteğe bağlı)</label>
+    <input name="campaign" placeholder="yaz_promo" >
+  </div>
+  <div>
+    <label>Bağlantı sayısı</label>
+    <input name="count" type="number" min="1" max="50" value="1">
+  </div>
+  <div style="display:flex; align-items:flex-end;">
+    <button type="submit">Oluştur</button>
+  </div>
+</form>
+
+<h3 style="margin-top:18px;">Son bağlantılar</h3>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Oluşturulma</th>
+      <th>Dosya</th>
+      <th>Kampanya</th>
+      <th>URL</th>
+      <th>QR</th>
+      <th>Tıklamalar</th>
+      <th>Sil</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for l in links %}
+      <tr id="row-{{ l.id }}">
+        <td>{{ l.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+        <td>{{ l.file_name }}</td>
+        <td>{{ l.campaign or "-" }}</td>
+        <td><a href="{{ url_for('click', link_id=l.id, _external=True) }}" target="_blank">aç</a></td>
+        <td><a href="{{ url_for('qr', link_id=l.id) }}" target="_blank">PNG</a></td>
+        <td><span class="badge">{{ l.clicks|length }}</span></td>
+        <td>
+          <button onclick="deleteLink({{ l.id }})" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7">Henüz bağlantı yok.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<script>
+function deleteLink(linkId) {
+  if (!confirm("Bu bağlantıyı silmek istediğinizden emin misiniz?")) return;
+
+  fetch(`/delete_link/${linkId}`, {
+    method: "POST",
+    headers: { "X-Requested-With": "XMLHttpRequest" }
+  })
+  .then(res => {
+    if (res.ok) {
+      document.getElementById(`row-${linkId}`).remove();
+    } else {
+      alert("Silme işlemi başarısız oldu.");
+    }
+  });
+}
+</script>
+{% endblock %}

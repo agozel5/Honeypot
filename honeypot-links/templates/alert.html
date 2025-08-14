@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="alert-box">
+  <h1>⚠️ Güvenlik Uyarısı</h1>
+  <p>Potansiyel olarak tehlikeli bir bağlantıya tıkladınız:</p>
+  <p class="danger">{{ file_name }}</p>
+  <p>Neyse ki, bu bir <strong>eğitim amaçlı simülasyon</strong> olup, şüpheli bağlantılara karşı farkındalık yaratmayı amaçlamaktadır.</p>
+  <p>Gerçek hayatta dikkat etmeniz gereken ipuçları:</p>
+  <div style="text-align:left; display:inline-block;">
+    <ul>
+      <li>Alışılmadık veya kısaltılmış URL adresi</li>
+      <li>Yapay aciliyet, kazanç vaadi</li>
+      <li>Yazım hataları, kötü tasarlanmış logolar</li>
+      <li>Kullanıcı adı/şifre talebi</li>
+    </ul>
+  </div>
+  <!-- Bouton "Geri Dön" supprimé pour les utilisateurs -->
+</div>
+{% endblock %}

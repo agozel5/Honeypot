@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="logs-page-flag"></div>
+<h2>📊 Tıklama Gösterge Tablosu</h2>
+
+<div class="row" style="margin-top:12px;">
+  <div>
+    <label>Genel arama</label>
+    <input id="q" placeholder="user-agent, referrer, dosya…">
+  </div>
+  <div>
+    <label>Tam IP</label>
+    <input id="ip" placeholder="örn: 1.2.3.4">
+  </div>
+  <div>
+    <label>Kampanya</label>
+    <input id="campaign" placeholder="yaz_promo">
+  </div>
+  <div>
+    <label>Dosya içeriyor</label>
+    <input id="file" placeholder="rapor">
+  </div>
+  <div>
+    <label>Dönem (gün)</label>
+    <input id="days" type="number" min="1" max="365">
+  </div>
+  <div>
+    <label>Girdi / sayfa</label>
+    <input id="per_page" type="number" min="1" max="200" value="25">
+  </div>
+</div>
+
+<div class="actions" style="margin-top:12px;">
+  <button id="btn-prev" class="secondary">◀ Önceki</button>
+  <button id="btn-next" class="">Sonraki ▶</button>
+
+  <select id="refresh" class="secondary">
+    <option value="0">Manuel yenileme</option>
+    <option value="3000">Otomatik 3s</option>
+    <option value="5000" selected>Otomatik 5s</option>
+    <option value="10000">Otomatik 10s</option>
+  </select>
+
+  <a class="badge" href="{{ url_for('export_logs', format='csv') }}">CSV Dışa Aktar</a>
+  <a class="badge" href="{{ url_for('export_logs', format='json') }}">JSON Dışa Aktar</a>
+</div>
+
+<div class="kpi">
+  <div class="item">İpucu: Sütunlar CSV/BI ile dışa aktarılırken otomatik sıralanır.</div>
+</div>
+
+<div class="table-wrap" style="margin-top:12px;">
+<table>
+  <thead>
+    <tr>
+      <th>Tarih</th>
+      <th>IP</th>
+      <th>Geo</th>
+      <th>User-Agent</th>
+      <th>Dosya</th>
+      <th>Kampanya</th>
+      <th>Bağlantılar</th>
+    </tr>
+  </thead>
+  <tbody id="logs-tbody"></tbody>
+</table>
+</div>
+
+<div id="logs-meta" style="margin-top:10px; color:#bcd1ff;"></div>
+{% endblock %}

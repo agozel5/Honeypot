@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title or "Honeypot Bağlantılar" }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo"></div>
+      <h1>Honeypot Bağlantılar</h1>
+      {% if not qr_only %}
+      <div class="actions" style="margin-left:auto;">
+        <a class="badge" href="{{ url_for('index') }}">Ana Sayfa</a>
+        <a class="badge" href="{{ url_for('logs_page') }}">Kayıtlar</a>
+        <a class="badge" href="{{ url_for('campaigns_page') }}">Kampanyalar</a>
+      </div>
+      {% endif %}
+    </header>
+
+    <div class="card">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
